@@ -27,6 +27,7 @@ export default {
   methods:{
     itemClick(index){
       this.currentIndex = index
+      this.$emit('tabClick',index)
     }
   }
 }
@@ -42,6 +43,7 @@ export default {
   background-color: #ffffff;
   position: sticky;
   top: 46px;
+  z-index: 9;
 }
 .tab-control div{
   flex: 1;

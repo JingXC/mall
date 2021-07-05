@@ -1,39 +1,16 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <tab-bar>
-      <tab-bar-item path="/home" active-color="green">
-        <img src="~assets/img/tabbar/home.svg" alt="" slot="item-icon">
-        <img src="~assets/img/tabbar/home_active.svg" alt="" slot="item-icon-active">
-        <span slot="item-text">首页</span>
-      </tab-bar-item>
-      <tab-bar-item path="/category">
-        <img src="~assets/img/tabbar/category.svg" alt="" slot="item-icon">
-        <img src="~assets/img/tabbar/category_active.svg" alt="" slot="item-icon-active">
-        <span slot="item-text">分类</span>
-      </tab-bar-item>
-      <tab-bar-item path="/shopCat">
-        <img src="~assets/img/tabbar/shopcart.svg" alt="" slot="item-icon">
-        <img src="~assets/img/tabbar/shopcart_active.svg" alt="" slot="item-icon-active">
-        <span slot="item-text">购物车</span>
-      </tab-bar-item>
-      <tab-bar-item path="/proFile">
-        <img src="~assets/img/tabbar/profile.svg" alt="" slot="item-icon">
-        <img src="~assets/img/tabbar/profile_active.svg" alt="" slot="item-icon-active">
-        <span slot="item-text">我的</span>
-      </tab-bar-item>
-    </tab-bar>
+    <main-tab-bar></main-tab-bar>
   </div>
 </template>
 
 <script>
-import TabBar from "@/components/common/tabbar/TabBar";
-import TabBarItem from "@/components/common/tabbar/TabBarItem";
+import MainTabBar from "@/components/content/mainTabBar/MainTabBar";
 export default {
   name:'App',
   components:{
-    TabBar,
-    TabBarItem
+    MainTabBar
   }
 }
 </script>
