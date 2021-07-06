@@ -21,11 +21,11 @@ export default {
 
 <style scoped>
 .nav-bar {
-  height: 46px;
+  height: 44px;
   display: flex;
   box-shadow: 0px 1px 1px rgba(100, 100, 100, .1);
   text-align: center;
-  line-height: 46px;
+  line-height: 44px;
 }
 .left,.right{
   width: 60px;

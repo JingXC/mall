@@ -42,8 +42,7 @@ export default {
   font-size: 15px;
   background-color: #ffffff;
   position: sticky;
-  top: 46px;
-  z-index: 9;
+  top: 44px;
 }
 .tab-control div{
   flex: 1;
