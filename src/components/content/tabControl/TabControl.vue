@@ -24,10 +24,10 @@ export default {
       }
     }
   },
-  methods:{
-    itemClick(index){
+  methods: {
+    itemClick(index) {
       this.currentIndex = index
-      this.$emit('tabClick',index)
+      this.$emit('tabClick', index)
     }
   }
 }
@@ -41,10 +41,9 @@ export default {
   line-height: 40px;
   font-size: 15px;
   background-color: #ffffff;
-  position: sticky;
-  top: 44px;
 }
-.tab-control div{
+
+.tab-control div {
   flex: 1;
 }
 

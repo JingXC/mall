@@ -3,16 +3,23 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <tab-control ref="tc1"
+                 :titles="['流行','新款','精选']"
+                 @tabClick="tabClick"
+                 class="tab-control"
+                 v-show="istc1Show"/>
     <b-scroll class="b-scroll"
               ref="scroll"
               :probe-type="3"
               :pull-up-load="true"
               @scrollOn="scrollOn"
               @pullingUp="loadMore">
-      <home-swiper :banners="banners"/>
+      <home-swiper :banners="banners" @swiperImgLoad="swiperImgLoad"/>
       <recommend-view :recommends="recommends"/>
       <feature-view/>
-      <tab-control :titles="['流行','新款','精选']" @tabClick="tabClick"/>
+      <tab-control ref="tc2"
+                   :titles="['流行','新款','精选']"
+                   @tabClick="tabClick"/>
       <goods-list :goodsList="goodsList[currentType].list"/>
     </b-scroll>
     <back-top @click.native="backTopClick" v-show="isBackTopShow"/>
@@ -30,6 +37,7 @@ import BScroll from "@/components/content/bscroll/BScroll";
 import BackTop from "@/components/content/backTop/BackTop";
 
 import {getHomeMultiData, getHomeGoodsList} from "network/home";
+import {debounce} from "@/common/utils";
 
 export default {
   name: "Home",
@@ -53,7 +61,10 @@ export default {
         'sell': {page: 0, list: []},
       },
       currentType: 'pop',
-      isBackTopShow: false
+      isBackTopShow: false,
+      tabOffSetTop: 0,
+      istc1Show: false,
+      scrollY: 0
     }
   },
   created() {
@@ -61,6 +72,21 @@ export default {
     this.getHomeGoodsList('pop')
     this.getHomeGoodsList('new')
     this.getHomeGoodsList('sell')
+  },
+  mounted() {
+    const refresh = debounce(this.$refs.scroll.refresh, 20)
+    this.$bus.$on('goodsItemImgLoad', () => {
+      refresh()
+    })
+  },
+  activated() {
+    //回来的时候回到记录的位置
+    this.$refs.scroll.refresh()
+    this.$refs.scroll.scrollTo(0, this.scrollY, 10)
+  },
+  deactivated() {
+    //离开的时候记录当前位置
+    this.scrollY = this.$refs.scroll.getScrollY()
   },
   methods: {
     /**
@@ -78,15 +104,26 @@ export default {
           this.currentType = 'sell'
           break
       }
+      this.$refs.tc1.currentIndex = index
+      this.$refs.tc2.currentIndex = index
     },
+    //回到顶部按钮点击
     backTopClick() {
       this.$refs.scroll.scrollTo(0, 0, 500)
     },
+    //监听滑动位置
     scrollOn(position) {
+      //滑动超过1000显示回到顶部按钮
       this.isBackTopShow = (-position.y) > 1000 ? true : false
+      //是否fixed tc1
+      this.istc1Show = (-position.y) > this.tabOffSetTop
     },
-    loadMore(){
+    //上拉加载更多
+    loadMore() {
       this.getHomeGoodsList(this.currentType)
+    },
+    swiperImgLoad() {
+      this.tabOffSetTop = this.$refs.tc2.$el.offsetTop
     },
     /**
      * 网络请求相关
@@ -112,7 +149,6 @@ export default {
 
 <style scoped>
 #home {
-  padding-top: 44px;
   height: 100vh;
   position: relative;
 }
@@ -120,10 +156,10 @@ export default {
 .home-nav {
   background-color: var(--color-tint);
   color: white;
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
+}
+
+.tab-control {
+  position: relative;
   z-index: 9;
 }
 

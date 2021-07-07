@@ -1,10 +1,11 @@
 <template>
   <div class="goods-item">
-    <img :src="goods.show.img" alt="">
+    <!--@load图片加载完后执行goodsItemImgLoad方法-->
+    <img :src="goods.show.img" alt="" @load="goodsItemImgLoad">
     <div class="goods-info">
-      <p>{{goods.title}}</p>
-      <span class="price">{{goods.price}}</span>
-      <span class="collect">{{goods.cfav}}</span>
+      <p>{{ goods.title }}</p>
+      <span class="price">{{ goods.price }}</span>
+      <span class="collect">{{ goods.cfav }}</span>
     </div>
   </div>
 </template>
@@ -12,28 +13,36 @@
 <script>
 export default {
   name: "GoodsItem",
-  props:{
-    goods:{
-      type:Object,
-      default(){
+  props: {
+    goods: {
+      type: Object,
+      default() {
         return {}
       }
+    }
+  },
+  methods: {
+    //this.$bus为Vue的事件总线，此方法发出一个goodsItemImgLoad事件，其他组件可以监听此事件
+    goodsItemImgLoad() {
+      this.$bus.$emit('goodsItemImgLoad')
     }
   }
 }
 </script>
 
 <style scoped>
-.goods-item{
+.goods-item {
   width: 47%;
   position: relative;
   padding-bottom: 40px;
 }
-.goods-item img{
+
+.goods-item img {
   width: 100%;
   border-radius: 5px;
 }
-.goods-info{
+
+.goods-info {
   font-size: 12px;
   position: absolute;
   bottom: 5px;
@@ -42,20 +51,24 @@ export default {
   overflow: hidden;
   text-align: center;
 }
-.goods-info p{
+
+.goods-info p {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-bottom: 3px;
 }
-.goods-info .price{
+
+.goods-info .price {
   color: var(--color-high-text);
   margin-right: 20px;
 }
-.goods-info .collect{
+
+.goods-info .collect {
   position: relative;
 }
-.goods-info .collect::before{
+
+.goods-info .collect::before {
   content: '';
   position: absolute;
   left: -15px;
