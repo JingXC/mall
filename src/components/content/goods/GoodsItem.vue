@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="goodsItemClick">
     <!--@load图片加载完后执行goodsItemImgLoad方法-->
     <img :src="goods.show.img" alt="" @load="goodsItemImgLoad">
     <div class="goods-info">
@@ -25,6 +25,10 @@ export default {
     //this.$bus为Vue的事件总线，此方法发出一个goodsItemImgLoad事件，其他组件可以监听此事件
     goodsItemImgLoad() {
       this.$bus.$emit('goodsItemImgLoad')
+    },
+    //点击进入详情页
+    goodsItemClick(){
+      this.$router.push('/detail/' + this.goods.iid)
     }
   }
 }
