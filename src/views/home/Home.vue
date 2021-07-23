@@ -37,7 +37,7 @@ import BScroll from "@/components/content/bscroll/BScroll";
 import BackTop from "@/components/content/backTop/BackTop";
 
 import {getHomeMultiData, getHomeGoodsList} from "network/home";
-import {debounce} from "@/common/utils";
+import {itemListenerMixin} from "@/common/mixin";
 
 export default {
   name: "Home",
@@ -51,6 +51,7 @@ export default {
     BScroll,
     BackTop
   },
+  mixins: [itemListenerMixin],
   data() {
     return {
       banners: [],
@@ -61,8 +62,8 @@ export default {
         'sell': {page: 0, list: []},
       },
       currentType: 'pop',
-      isBackTopShow: false,
       tabOffSetTop: 0,
+      isBackTopShow: false,
       istc1Show: false,
       scrollY: 0
     }
@@ -74,10 +75,13 @@ export default {
     this.getHomeGoodsList('sell')
   },
   mounted() {
+    /*//this.$refs.scroll.refresh对这个函数进行防抖操作
     const refresh = debounce(this.$refs.scroll.refresh, 20)
-    this.$bus.$on('goodsItemImgLoad', () => {
+    //对监听的函数进行保存
+    this.itemImgListener = () => {
       refresh()
-    })
+    }
+    this.$bus.$on('goodsItemImgLoad', this.itemImgListener)*/
   },
   activated() {
     //回来的时候回到记录的位置
@@ -87,6 +91,8 @@ export default {
   deactivated() {
     //离开的时候记录当前位置
     this.scrollY = this.$refs.scroll.getScrollY()
+    //取消监听goodsItemImgLoad
+    this.$bus.$off('goodsItemImgLoad', this.itemImgListener)
   },
   methods: {
     /**
@@ -123,6 +129,9 @@ export default {
       this.getHomeGoodsList(this.currentType)
     },
     swiperImgLoad() {
+      //获取tc2组件的offsetTop
+      //获取offsetTop，组件不是DOM元素，是没有offsetTop的，无法通过.offsetTop来获取的。就需要通过$el来获取组件中的DOM元素
+      //所有的组件都有一个属性$el，用于获取组件中的元素
       this.tabOffSetTop = this.$refs.tc2.$el.offsetTop
     },
     /**

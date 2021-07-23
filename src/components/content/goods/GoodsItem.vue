@@ -1,7 +1,7 @@
 <template>
   <div class="goods-item" @click="goodsItemClick">
     <!--@load图片加载完后执行goodsItemImgLoad方法-->
-    <img :src="goods.show.img" alt="" @load="goodsItemImgLoad">
+    <img :src="showImg" alt="" @load="goodsItemImgLoad">
     <div class="goods-info">
       <p>{{ goods.title }}</p>
       <span class="price">{{ goods.price }}</span>
@@ -23,12 +23,28 @@ export default {
   },
   methods: {
     //this.$bus为Vue的事件总线，此方法发出一个goodsItemImgLoad事件，其他组件可以监听此事件
+
     goodsItemImgLoad() {
+      //首页和详情页图片load监听
+      //方法一
+      /*if (this.$route.path.indexOf('/home') != -1) {
+        this.$bus.$emit('goodsItemImgLoad')
+        console.log('goodsItemImgLoad')
+      } else if (this.$route.path.indexOf('/detail') != -1) {
+        this.$bus.$emit('detailGoodsItemImgLoad')
+        console.log('detailGoodsItemImgLoad')
+      }*/
+      //方法二  mixin混入
       this.$bus.$emit('goodsItemImgLoad')
     },
     //点击进入详情页
-    goodsItemClick(){
+    goodsItemClick() {
       this.$router.push('/detail/' + this.goods.iid)
+    }
+  },
+  computed: {
+    showImg() {
+      return this.goods.image || this.goods.show.img
     }
   }
 }
