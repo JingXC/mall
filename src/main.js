@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import toast from "@/components/common/toast";
 
 Vue.config.productionTip = false
 /**
@@ -9,7 +10,10 @@ Vue.config.productionTip = false
  * this.$bus.$emit('事件名称',参数)
  * this.$bus.$on('事件名称',回调函数)
  */
-Vue.prototype.$bus = new Vue
+Vue.prototype.$bus = new Vue()
+
+Vue.use(toast)
+/**/
 new Vue({
   router,
   store,

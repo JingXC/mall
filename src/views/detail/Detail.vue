@@ -19,7 +19,6 @@
     </b-scroll>
     <back-top @click.native="backTopClick" v-show="isBackTopShow"/>
     <detail-bottom-bar @addCart="addCart"/>
-
   </div>
 </template>
 
@@ -39,6 +38,7 @@ import BackTop from "@/components/content/backTop/BackTop";
 import {getDetail, getRecommends, Goods, Shop, GoodsParam} from "@/network/detail";
 import {itemListenerMixin} from "@/common/mixin";
 import {debounce} from "@/common/utils";
+import {mapActions} from "vuex"
 
 export default {
   name: "Detail",
@@ -116,6 +116,9 @@ export default {
   },
   methods: {
     //点击回到顶部
+    ...mapActions({
+      add: 'addCart'
+    }),
     backTopClick() {
       this.$refs.scroll.scrollTo(0, 0, 500)
     },
@@ -147,7 +150,9 @@ export default {
       product.title = this.goods.title
       product.price = this.goods.realPrice
       product.iid = this.iid
-      console.log(product)
+      this.add(product).then(res => {
+        this.$toast.show(res)
+      })
     }
   },
   updated() {
